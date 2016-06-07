@@ -59,7 +59,7 @@ class migrator
     private $categoriesMapping = array();
     private $versionsMapping = array();
     private $journalsMapping = array();
-    private $issuesMapping = array(2 => 4);
+    private $issuesMapping = array();
     private $issuesParentsMapping = array();
     private $issuesRelationsMapping = array();
     private $timeEntriesMapping = array();
@@ -570,6 +570,7 @@ class migrator
     {
         $result = $this->dbOld->select('issues', array('project_id' => $idProjectOld));
         $issuesOld = $this->dbOld->getAssocArrays($result);
+        $maxId = $this->dbNew->getMaxIssueId() + 1;
         foreach ($issuesOld as $issueOld) {
             $idIssueOld = $issueOld['id'];
             unset($issueOld['id']);
@@ -589,6 +590,7 @@ class migrator
 
             $idIssueNew = $this->dbNew->insert('issues', $issueOld);
             $this->issuesMapping[$idIssueOld] = $idIssueNew;
+            $idIssueOld = $maxId;
 
             $this->migrateJournals($idIssueOld);
         }

@@ -176,6 +176,7 @@ class DBMysql
         return $this->query("SHOW TABLES FROM `" . $this->databaseName . "` LIKE '" . $tableName . "'");
     }
 
+
     /**
      * Escape string for inclusion in SQL
      * @param string $str
@@ -318,6 +319,13 @@ class DBMysql
         } else {
             return false;
         }
+    }
+
+
+    public function getMaxIssueId()
+    {
+        $query = "SELECT('id') FROM issues`";
+        return $this->query($query);
     }
 
     /**
