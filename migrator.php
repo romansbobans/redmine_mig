@@ -570,7 +570,6 @@ class migrator
     {
         $result = $this->dbOld->select('issues', array('project_id' => $idProjectOld));
         $issuesOld = $this->dbOld->getAssocArrays($result);
-        $maxId = $this->dbNew->getMaxIssueId() + 1;
         foreach ($issuesOld as $issueOld) {
             $idIssueOld = $issueOld['id'];
             unset($issueOld['id']);
