@@ -676,4 +676,4 @@ class migrator
 $migrator = new migrator('localhost', 'redmine', 'admin', 'qwerty123',
                             'localhost', 'redmine',   'admin', 'qwerty123');
 
-$migrator->migrateProject(86);
+$migrator->migrateProject(2);
