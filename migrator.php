@@ -363,7 +363,7 @@ class migrator
                 $pattern = '/(issues\/)(\d+)/';
                 preg_match($pattern, $descriptionIssue, $matches, PREG_OFFSET_CAPTURE, $offset);
 
-                if (count($matches) > 1) {
+                if (count($matches) > 1 && strlen($descriptionIssue) > $offset) {
                     $offset = strpos($descriptionIssue, $matches[0][0], $offset)+1;
                     $descrNew = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $descriptionIssue);
                     $this->dbNew->update("issues", array("description" => $descrNew), array('id' => $issueNew['id']));
@@ -372,7 +372,6 @@ class migrator
                 }
             };
         }
-        $offset = 1;
     }
 
     private function migrateWatchers($idProjectOld)
