@@ -358,7 +358,7 @@ class migrator
         $issuesNew = $this->dbNew->getAssocArrays($result);
         foreach ($issuesNew as $issueNew) {
             $descriptionIssue = $issueNew['description'];
-            $pattern = '/(issues\/)(\d)/';
+            $pattern = '/(issues\/)(\d+)/';
             preg_match($pattern, $descriptionIssue, $matches, PREG_OFFSET_CAPTURE, 3);
 
             if (count($matches) > 1) {
