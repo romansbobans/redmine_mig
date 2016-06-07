@@ -364,7 +364,7 @@ class migrator
             if (count($matches) > 1) {
                 $descrNew = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $descriptionIssue);
                 $this->dbNew->update("issues", array("description" => $descrNew), array('id' => $issueNew['id']));
-                echo 'issue description update from : ' . $descriptionIssue . " to " . $descrNew . "with new id " . issuesMapping[$matches[2][0]];
+                echo 'issue description update from : ' . $descriptionIssue . " to " . $descrNew . ' with new id ' . $this->issuesMapping[$matches[2][0]];
 
             };
         }
