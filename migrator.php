@@ -589,7 +589,6 @@ class migrator
 
             $idIssueNew = $this->dbNew->insert('issues', $issueOld);
             $this->issuesMapping[$idIssueOld] = $idIssueNew;
-            $idIssueOld = $maxId;
 
             $this->migrateJournals($idIssueOld);
         }
@@ -679,4 +678,4 @@ class migrator
 $migrator = new migrator('localhost', 'redmine', 'admin', 'qwerty123',
                             'localhost', 'redmine',   'admin', 'qwerty123');
 
-$migrator->migrateProject(2);
+$migrator->migrateProject(1);
