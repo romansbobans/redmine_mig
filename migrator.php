@@ -53,7 +53,7 @@ class migrator
             4 => 4,
     );
 
-    private $projectsMapping = array();
+    private $projectsMapping = array(2 => 3);
     private $categoriesMapping = array();
     private $versionsMapping = array();
     private $journalsMapping = array();
