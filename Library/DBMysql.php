@@ -81,7 +81,7 @@ class DBMysql
      */
     public function connect($databaseName = "")
     {
-        $this->bdLink = @ mysql_connect($this->hostname, $this->username, $this->password, '', $this->port);
+        $this->bdLink = @ mysqli_connect($this->hostname, $this->username, $this->password, '', $this->port);
         $this->gestionErreur(!$this->bdLink, 'Connect - ' . self::ERROR_CONNECT . ' ' . $this->hostname);
         if ($databaseName != "") {
             $this->selectBd($databaseName);
