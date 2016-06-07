@@ -361,7 +361,7 @@ class migrator
             $pattern = '/(issues\/)(\d)/';
             preg_match($pattern, $descriptionIssue, $matches, PREG_OFFSET_CAPTURE, 3);
             if (count($matches) > 1) {
-                $descrNew = str_replace($matches[0][0], $descriptionIssue, "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}");
+                $descrNew = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $descriptionIssue);
                 $this->dbNew->update("issues", array("description" => $descrNew), array('id' => $issueNew['id']));
             };
         }
