@@ -352,6 +352,39 @@ class migrator
             $this->nbAt++;
         }
     }
+    private function migrateLinks($idProjectNew)
+    {
+        $result = $this->dbNew->select('issues', array('project_id' => $idProjectNew));
+        $issuesNew = $this->dbNew->getAssocArrays($result);
+        foreach ($issuesNew as $issueNew) {
+            $descriptionIssue = $issueNew['description'];
+            $pattern = '/(issues\/)(\d)/';
+            preg_match($pattern, $descriptionIssue, $matches, PREG_OFFSET_CAPTURE, 3);
+            if (count($matches) > 1) {
+                $descrNew = $descriptionIssue.str_replace($matches[0][0], $matches[1][0] + $this->issuesMapping[$matches[2][0]]);
+                $this->dbNew->update("issues", array("description" => $descrNew), array('id' => $issueNew['id']));
+            }
+            unset($issuesNew['id']);
+
+            // Update fields for new version of issue
+            $issueOld['project_id'] = $this->projectsMapping[$idProjectNew];
+            $issueOld['assigned_to_id'] = $this->replaceUser($issueOld['assigned_to_id']);
+            $issueOld['author_id'] = $this->replaceUser($issueOld['author_id']);
+            $issueOld['priority_id'] = $this->replacePriority($issueOld['priority_id']);
+            $issueOld['status_id'] = $this->replaceStatus($issueOld['status_id']);
+            $issueOld['category_id'] = $this->replaceCategory($issueOld['category_id']);
+            $issueOld['tracker_id'] = $this->replaceTracker($issueOld['tracker_id']);
+
+            if ($issueOld['fixed_version_id']) {
+                $issueOld['fixed_version_id'] = $this->versionsMapping[$issueOld['fixed_version_id']];
+            }
+
+            $idIssueNew = $this->dbNew->insert('issues', $issueOld);
+            $this->issuesMapping[$idIssueOld] = $idIssueNew;
+
+            $this->migrateJournals($idIssueOld);
+        }
+    }
 
     private function migrateWatchers($idProjectOld)
     {
