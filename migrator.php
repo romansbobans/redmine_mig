@@ -356,7 +356,7 @@ class migrator
     {
         $result = $this->dbNew->select('issues', array('project_id' => $idProjectNew));
         $issuesNew = $this->dbNew->getAssocArrays($result);
-        $offset = 0;
+        $offset = 1;
         foreach ($issuesNew as $issueNew) {
             while (true) {
                 $descriptionIssue = $issueNew['description'];
