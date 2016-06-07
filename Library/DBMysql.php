@@ -81,13 +81,13 @@ class DBMysql
      */
     public function connect($databaseName = "")
     {
-        $this->bdLink = @ mysqli_connect($this->hostname, $this->username, $this->password, '', $this->port);
+        $this->bdLink = @ mysql_connect($this->hostname, $this->username, $this->password, '', $this->port);
         $this->gestionErreur(!$this->bdLink, 'Connect - ' . self::ERROR_CONNECT . ' ' . $this->hostname);
         if ($databaseName != "") {
             $this->selectBd($databaseName);
         }
 
-        //request with UTF-8 character set according to http://se.php.net/manual/en/function.mysqli-query.php
+        //request with UTF-8 character set according to http://se.php.net/manual/en/function.mysql-query.php
         $this->bdLink->query("SET NAMES 'utf8'");
     }
 
@@ -98,18 +98,18 @@ class DBMysql
     public function disconnect()
     {
         if (isset($this->bdLink)) {
-            @ mysqli_close($this->bdLink);
+            @ mysql_close($this->bdLink);
             unset($this->bdLink);
         }
     }
 
     /**
-     * Start transaction (by making sure mysqli autocommit is turned off)
+     * Start transaction (by making sure mysql autocommit is turned off)
      */
     public function startTransaction()
     {
         $this->gestionErreur(!isset($this->bdLink), "Start transaction - " . self::ERROR_NO_CONNECTION);
-        mysqli_autocommit($this->bdLink, false);
+        mysql_autocommit($this->bdLink, false);
     }
 
     /**
@@ -118,7 +118,7 @@ class DBMysql
     public function commit()
     {
         $this->gestionErreur(!isset($this->bdLink), "Commit transaction - " . self::ERROR_NO_CONNECTION);
-        mysqli_commit($this->bdLink);
+        mysql_commit($this->bdLink);
     }
 
     /**
@@ -127,7 +127,7 @@ class DBMysql
     public function rollback()
     {
         $this->gestionErreur(!isset($this->bdLink), "Rollback transaction - " . self::ERROR_NO_CONNECTION);
-        mysqli_rollback($this->bdLink);
+        mysql_rollback($this->bdLink);
     }
 
     /**
@@ -138,26 +138,26 @@ class DBMysql
     {
         $this->gestionErreur(!isset($this->bdLink), "SelectBd - " . self::ERROR_NO_CONNECTION);
         $this->databaseName = $databaseName;
-        $this->gestionErreur(!@ mysqli_select_db($this->bdLink, $databaseName), "SelectBd - " . self::ERROR_SELECT_DB . ' ' . $this->databaseName);
+        $this->gestionErreur(!@ mysql_select_db($this->bdLink, $databaseName), "SelectBd - " . self::ERROR_SELECT_DB . ' ' . $this->databaseName);
     }
 
     /**
      * Execute SQL query
      * @param string $query
-     * @return mysqli_result|boolean mysqli_result if results are expected, true otherwise and null if no results
+     * @return mysql_result|boolean mysql_result if results are expected, true otherwise and null if no results
      */
     public function query($query)
     {
         $this->gestionErreur(!isset($this->bdLink), "Query - " . self::ERROR_NO_CONNECTION);
-        $this->gestionErreur(!@ mysqli_real_query($this->bdLink, $query), "Query - " . self::ERROR_SQL_FAILED . ' ' . $query);
+        $this->gestionErreur(!@ mysql_real_query($this->bdLink, $query), "Query - " . self::ERROR_SQL_FAILED . ' ' . $query);
 
         //si c'est une requête qui n'est pas cense ramener qqchose on stop
-        if (@ mysqli_field_count($this->bdLink) == 0) {
+        if (@ mysql_field_count($this->bdLink) == 0) {
             return true;
         }
 
-        $result = @ mysqli_store_result($this->bdLink);
-        if (@ mysqli_num_rows($result) > 0) {
+        $result = @ mysql_store_result($this->bdLink);
+        if (@ mysql_num_rows($result) > 0) {
             return $result;
         } else {
             return null;
@@ -186,7 +186,7 @@ class DBMysql
         if (is_null($str)) {
             return 'NULL';
         } else {
-            return "'" . mysqli_real_escape_string($this->bdLink, $str) . "'";
+            return "'" . mysql_real_escape_string($this->bdLink, $str) . "'";
         }
     }
 
@@ -202,11 +202,11 @@ class DBMysql
 
     /**
      * Get one object from a resultset
-     * @param mysqli_result $result
+     * @param mysql_result $result
      * @param string $className
      * @return Object of type $className
      */
-    public function getObject(mysqli_result $result = null, $className)
+    public function getObject(mysql_result $result = null, $className)
     {
         $obj = null;
         if ($result != null) {
@@ -224,11 +224,11 @@ class DBMysql
 
     /**
      * Get an array of objects from a resultset
-     * @param mysqli_result $result
+     * @param mysql_result $result
      * @param string $className
      * @return Object[] of type $className
      */
-    public function getObjects(mysqli_result $result = null, $className)
+    public function getObjects(mysql_result $result = null, $className)
     {
         $arrayObjects = array();
         if ($result != null) {
@@ -249,10 +249,10 @@ class DBMysql
     /**
      * Get all fields of all records in one single non-associative array
      * It's basically all values available concatened in a single array
-     * @param mysqli_result $result
+     * @param mysql_result $result
      * @return array empty array if no result
      */
-    public function getRowArrays(mysqli_result $result = null)
+    public function getRowArrays(mysql_result $result = null)
     {
         $arrayFromResultSet = array();
         if ($result != null) {
@@ -268,10 +268,10 @@ class DBMysql
 
     /**
      * Get one record as one associative array
-     * @param mysqli_result $result
+     * @param mysql_result $result
      * @return array empty array if no result
      */
-    public function getAssocArray(mysqli_result $result = null)
+    public function getAssocArray(mysql_result $result = null)
     {
         $return = array();
         if ($result != null) {
@@ -283,10 +283,10 @@ class DBMysql
 
     /**
      * Get all records as an array of associative arrays
-     * @param mysqli_result $result
+     * @param mysql_result $result
      * @return array empty array if no result
      */
-    public function getAssocArrays(mysqli_result $result = null)
+    public function getAssocArrays(mysql_result $result = null)
     {
         $contentArray = array();
         if ($result != null) {
@@ -348,7 +348,7 @@ class DBMysql
      * @param string|array $clauses either a string used directly in SQL, or an associative array of field => value
      * @param array $fields
      * @param string $orderBy
-     * @return mysqli_result|false
+     * @return mysql_result|false
      */
     public function select($tables, $clauses = null, array $fields = array('*'), $orderBy = null)
     {
@@ -427,11 +427,11 @@ class DBMysql
 
         // Gather error information
         if ($this->bdLink) {
-            $phpError = mysqli_error($this->bdLink);
-            $phpErrorNum = mysqli_errno($this->bdLink);
+            $phpError = mysql_error($this->bdLink);
+            $phpErrorNum = mysql_errno($this->bdLink);
         } else {
-            $phpError = mysqli_connect_error();
-            $phpErrorNum = mysqli_connect_errno();
+            $phpError = mysql_connect_error();
+            $phpErrorNum = mysql_connect_errno();
         }
         if ($phpErrorNum != 0) {
             $msgPhpError = 'Error n°' . $phpErrorNum . ': ' . $phpError;
