@@ -361,7 +361,7 @@ class migrator
             while (true) {
                 $descriptionIssue = $issueNew['description'];
                 $pattern = '/(issues\/)(\d+)/';
-                preg_match($pattern, $descriptionIssue, $matches, 3, $offset);
+                preg_match($pattern, $descriptionIssue, $matches, PREG_OFFSET_CAPTURE, $offset);
 
                 if (count($matches) > 1) {
                     $descrNew = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $descriptionIssue);
