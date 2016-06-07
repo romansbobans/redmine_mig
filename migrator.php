@@ -57,7 +57,7 @@ class migrator
     private $categoriesMapping = array();
     private $versionsMapping = array();
     private $journalsMapping = array();
-    private $issuesMapping = array();
+    private $issuesMapping = array(2 => 4);
     private $issuesParentsMapping = array();
     private $issuesRelationsMapping = array();
     private $timeEntriesMapping = array();
