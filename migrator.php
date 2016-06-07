@@ -356,7 +356,7 @@ class migrator
     {
         $result = $this->dbNew->select('issues', array('project_id' => $idProjectNew));
         $issuesNew = $this->dbNew->getAssocArrays($result);
-        $offset = 1;
+        $offset = 0;
         foreach ($issuesNew as $issueNew) {
             while (true) {
                 $descriptionIssue = $issueNew['description'];
@@ -364,14 +364,15 @@ class migrator
                 preg_match($pattern, $descriptionIssue, $matches, PREG_OFFSET_CAPTURE, $offset);
 
                 if (count($matches) > 1) {
+                    $offset = strpos($descriptionIssue, $matches[0][0], $offset)+1;
                     $descrNew = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $descriptionIssue);
                     $this->dbNew->update("issues", array("description" => $descrNew), array('id' => $issueNew['id']));
-                    $offset = $matches[2][1];
                 } else {
                     break;
-                };
-            }
+                }
+            };
         }
+        $offset = 1;
     }
 
     private function migrateWatchers($idProjectOld)
