@@ -11,12 +11,12 @@ class migrator
     /**
      * @var DBMysql
      */
-    private $dbOld = null;
+    private $dbOld = "redmine_default";
 
     /**
      * @var DBMysql
      */
-    private $dbNew = null;
+    private $dbNew = "redmine_default";
 
     private $usersMapping = array(
             1 =>  1,
@@ -674,6 +674,6 @@ class migrator
 }
 
 $migrator = new migrator('localhost', 'redmine', 'root', '',
-                            'localhost', 'redmine_new',   'root', '');
+                            'localhost', 'redmine',   'root', '');
 
 $migrator->migrateProject(86);
