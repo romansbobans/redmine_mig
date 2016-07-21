@@ -690,7 +690,6 @@ class migrator
             $idProjectNew = $this->dbNew->insert('projects', $projectOld);
             $this->projectsMapping[$idProjectOld] = $idProjectNew;
             echo "migrating old redmine $idProjectOld => to new redmine $idProjectNew <br>\n";
-            $this->migrateUsers($idProjectOld);
             $this->migrateVersions($idProjectOld);
             $this->migrateCategories($idProjectOld);
             $this->migrateIssues($idProjectOld);
