@@ -19,7 +19,6 @@ class migrator
     private $dbNew = "redmine";
 
     private $usersMapping = array(
-            1 =>  100,
         );
 
     private $prioritiesMapping = array(
