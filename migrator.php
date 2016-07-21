@@ -11,7 +11,7 @@ class migrator
     /**
      * @var DBMysql
      */
-    private $dbOld = "kotov_redmine";
+    private $dbOld;
 
     /**
      * @var DBMysql
@@ -700,7 +700,7 @@ class migrator
     }
 }
 
-$migrator = new migrator('localhost', 'redmine', 'admin', 'qwerty123',
-                            'localhost', 'redmine',   'admin', 'qwerty123');
+$migrator = new migrator('localhost', 'kotov_redmine', 'root', '',
+                            'localhost', 'redmine',   'root', '');
 
 $migrator->migrateProject(14);
