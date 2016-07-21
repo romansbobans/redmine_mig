@@ -700,7 +700,7 @@ class migrator
     }
 }
 
-$migrator = new migrator('localhost', 'kotov_redmine', 'root', '',
-                            'localhost', 'redmine',   'root', '');
+$migrator = new migrator('localhost', 'kotov_redmine', 'root', 'root',
+                            'localhost', 'redmine',   'root', 'root');
 
 $migrator->migrateProject(1);
