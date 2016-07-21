@@ -703,4 +703,4 @@ class migrator
 $migrator = new migrator('localhost', 'kotov_redmine', 'root', '',
                             'localhost', 'redmine',   'root', '');
 
-$migrator->migrateProject(14);
+$migrator->migrateProject(1);
