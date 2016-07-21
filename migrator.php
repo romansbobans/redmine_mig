@@ -11,16 +11,15 @@ class migrator
     /**
      * @var DBMysql
      */
-    private $dbOld = "redmine_default";
+    private $dbOld = "kotov_redmine";
 
     /**
      * @var DBMysql
      */
-    private $dbNew = "redmine_default";
+    private $dbNew = "redmine";
 
     private $usersMapping = array(
-            1 =>  1,
-            7  =>  247,
+            1 =>  100,
         );
 
     private $prioritiesMapping = array(
@@ -599,6 +598,7 @@ class migrator
             unset($issueOld['id']);
 
             // Update fields for new version of issue
+            $issueOld['id'] = $idIssueOld+10000;
             $issueOld['project_id'] = $this->projectsMapping[$idProjectOld];
             $issueOld['assigned_to_id'] = $this->replaceUser($issueOld['assigned_to_id']);
             $issueOld['author_id'] = $this->replaceUser($issueOld['author_id']);
