@@ -109,10 +109,13 @@ class migrator
 
         if (!isset($this->usersMapping[$idUserOld])) {
             $result = $this->dbOld->select('users', array('id' => $idUserOld));
-            $oldUser = $this->dbOld->getAssocArrays($result);
+            $oldUsers = $this->dbOld->getAssocArrays($result);
+            $var = -1;
+            foreach ($oldUsers as $oldUser) {
             unset($oldUser['id']);
             $var = $this->dbNew->insert("users", $oldUser);
             $this->usersMapping[$idUserOld] = $var;
+            }
             return $var;
         } else {
             $var = $this->usersMapping[$idUserOld];
