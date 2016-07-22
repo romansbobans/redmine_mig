@@ -682,6 +682,10 @@ class migrator
 
         foreach ($projectsOld as $projectOld) {
             unset($projectOld['id']);
+            $result = $this->dbNew->select('projects', array('identifier' => $projectOld['identifier']));
+            if ($result) {
+                $projectOld['identifier'] = $projectOld['identifier'] ."3";
+            }
             $idProjectNew = $this->dbNew->insert('projects', $projectOld);
             $this->projectsMapping[$idProjectOld] = $idProjectNew;
             echo "migrating old redmine $idProjectOld => to new redmine $idProjectNew <br>\n";
