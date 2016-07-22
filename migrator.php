@@ -83,7 +83,7 @@ class migrator
             4 => 4,
     );
 
-    private $projectsMapping = array(2 => 3);
+    private $projectsMapping = array(2 => 60);
     private $categoriesMapping = array();
     private $versionsMapping = array();
     private $journalsMapping = array();
@@ -299,7 +299,7 @@ class migrator
             
           // Update fields
             $journalDetail['journal_id'] = $this->journalsMapping[$idJournalOld];
-            if (in_array($journalDetail['prop_key'], array('parent_id', 'label_relates_to', 'label_copied_to', 'label_copied_from'))) {
+            if (in_array($journalDetail['prop_key'], array('parent_id', 'label_relates_to', 'label_copied_to', 'label_copied_from', 'old_value', 'value'))) {
                 $journalDetail['old_value'] = $this->issuesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->issuesMapping[$journalDetail['value']];
             }
@@ -627,7 +627,7 @@ class migrator
             unset($issueOld['id']);
 
             // Update fields for new version of issue
-            $issueOld['id'] = $idIssueOld+10000;
+            $issueOld['id'] = $idIssueOld;
             $issueOld['project_id'] = $this->projectsMapping[$idProjectOld];
             $issueOld['assigned_to_id'] = $this->replaceUser($issueOld['assigned_to_id']);
             $issueOld['author_id'] = $this->replaceUser($issueOld['author_id']);
