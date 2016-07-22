@@ -626,8 +626,6 @@ class migrator
             $idIssueOld = $issueOld['id'];
             unset($issueOld['id']);
 
-            // Update fields for new version of issue
-            $issueOld['id'] = $idIssueOld;
             $issueOld['project_id'] = $this->projectsMapping[$idProjectOld];
             $issueOld['assigned_to_id'] = $this->replaceUser($issueOld['assigned_to_id']);
             $issueOld['author_id'] = $this->replaceUser($issueOld['author_id']);
