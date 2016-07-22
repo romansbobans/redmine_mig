@@ -84,6 +84,7 @@ class migrator
     private $boardsMapping = array();
     private $messagesMapping = array();
     private $newsMapping = array();
+    private $queriesMapping = array();
     private $documentsMapping = array();
     private $wikisMapping = array();
     private $wikipagesMapping = array();
@@ -506,6 +507,23 @@ class migrator
         }
     }
 
+    private function migrateQueries($idProjectOld)
+    {
+        $result = $this->dbOld->select('queries', array('project_id' => $idProjectOld));
+        $queriesOld = $this->dbOld->getAssocArrays($result);
+        foreach ($queriesOld as $queryOld) {
+            $idQueriesOld = $queryOld['id'];
+            unset($queryOld['id']);
+
+            // Update fields for new version of news
+            $queryOld['project_id'] = $this->projectsMapping[$idProjectOld];
+            $queryOld['user_id'] = $this->replaceUser($queryOld['user_id']);
+
+            $idQueriesNew = $this->dbNew->insert('queries', $queryOld);
+            $this->queriesMapping[$idQueriesOld] = $idQueriesNew;
+        }
+    }
+
     private function migrateDocuments($idProjectOld)
     {
         $result = $this->dbOld->select('documents', array('project_id' => $idProjectOld));
@@ -695,6 +713,7 @@ class migrator
             $this->migrateIssuesParents($idProjectOld);
             $this->migrateIssueRelations($idProjectOld);
             $this->migrateNews($idProjectOld);
+            $this->migrateQueries($idProjectOld);
             $this->migrateDocuments($idProjectOld);
             $this->migrateBoards($idProjectOld);
             $this->migrateTimeEntries($idProjectOld);
