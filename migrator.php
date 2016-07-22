@@ -22,32 +22,21 @@ class migrator
         3 => 11,
         2 => 2,
         4 => 199,
-        5 => 200,
         6 => 129,
-        7 => 201,
         8 => 13,
-        9 => 202,
         10 => 34,
         11 => 123,
         12 => 149,
         13 => 169,
         15 => 135,
         16 => 158,
-        17 => 203,
-        18 => 204,
         19 => 6,
         20 => 41,
         21 => 205,
         22 => 56,
         23 => 133,
-        25 => 206,
         27 => 197,
-        28 => 207,
         29 => 23,
-        30 => 208,
-        31 => 209,
-        32 => 210,
-        33 => 211,
         );
 
     private $prioritiesMapping = array(
@@ -121,7 +110,14 @@ class migrator
         if (!isset($this->usersMapping[$idUserOld])) {
             throw new Exception("No mapping defined for old user id '$idUserOld'");
         } else {
-            return $this->usersMapping[$idUserOld];
+            $var = $this->usersMapping[$idUserOld];
+            if (!isset($var)) {
+                $result = $this->dbOld->select('users', array('id' => $idUserOld));
+                unset($result['id']);
+                $var = $this->dbNew->insert("users", $result);
+                $this->usersMapping[$idUserOld] = $var;
+            }
+            return $var;
         }
     }
 
