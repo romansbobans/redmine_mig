@@ -519,6 +519,11 @@ class migrator
             $queryOld['project_id'] = $this->projectsMapping[$idProjectOld];
             $queryOld['user_id'] = $this->replaceUser($queryOld['user_id']);
 
+            $column_names = $queryOld['column_names'];
+            $filters= $queryOld['filters'];
+            echo $column_names .`\n`;
+            echo $filters .`\n`;
+
             $idQueriesNew = $this->dbNew->insert('queries', $queryOld);
             $this->queriesMapping[$idQueriesOld] = $idQueriesNew;
         }
