@@ -73,6 +73,7 @@ class migrator
             10  =>  10,
             11  =>  11,
             12  =>  12,
+            13  =>  13,
     );
 
     private $trackersMapping = array(
