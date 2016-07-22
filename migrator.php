@@ -108,15 +108,14 @@ class migrator
         }
 
         if (!isset($this->usersMapping[$idUserOld])) {
-            throw new Exception("No mapping defined for old user id '$idUserOld'");
+            $result = $this->dbOld->select('users', array('id' => $idUserOld));
+            unset($result['id']);
+            $oldUser = $this->dbOld->getAssocArrays($result);
+            $var = $this->dbNew->insert("users", $oldUser);
+            $this->usersMapping[$idUserOld] = $var;
+            return $var;
         } else {
             $var = $this->usersMapping[$idUserOld];
-            if (!isset($var)) {
-                $result = $this->dbOld->select('users', array('id' => $idUserOld));
-                unset($result['id']);
-                $var = $this->dbNew->insert("users", $result);
-                $this->usersMapping[$idUserOld] = $var;
-            }
             return $var;
         }
     }
