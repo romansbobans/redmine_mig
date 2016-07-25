@@ -172,8 +172,24 @@ class migrator
         if (!isset($this->statusMapping[$idStatusOld])) {
             throw new Exception("No status defined for old status id '$idStatusOld'");
         } else {
-            return $this->statusMapping[$idStatusOld];
+            $status = $this->statusMapping[$idStatusOld];
+            $mysqli_result = $this->dbNew->select("issue_statuses", array('id' => $status));
+            if (!$mysqli_result) {
+                return $this->insertStatus($idStatusOld);
+            }
+            return $status;
         }
+    }
+
+    private function insertStatus($idStatusOld) {
+        $result = $this->dbOld->select("issue_statuses", array('id' => $idStatusOld));
+        $statusesOld = $this->dbOld->getAssocArrays($result);
+        foreach ($statusesOld as $statussOld) {
+            unset($statussOld['id']);
+            $idStatusNew = $this->dbNew->insert('issue_categories', $statussOld);
+            $this->statusMapping[$idStatusOld] = $idStatusNew;
+        }
+        return $this->statusMapping[$idStatusOld];
     }
 
     private function replaceTracker($idTrackerOld)
