@@ -268,7 +268,7 @@ class migrator
         }
     }
 
-    private function migratemodules($idProjectOld)
+    private function migrateModules($idProjectOld)
     {
         $result = $this->dbOld->select('enabled_modules', array('project_id' => $idProjectOld));
         $modulesOld = $this->dbOld->getAssocArrays($result);
@@ -507,28 +507,6 @@ class migrator
         }
     }
 
-    private function migrateQueries($idProjectOld)
-    {
-        $result = $this->dbOld->select('queries', array('project_id' => $idProjectOld));
-        $queriesOld = $this->dbOld->getAssocArrays($result);
-        foreach ($queriesOld as $queryOld) {
-            $idQueriesOld = $queryOld['id'];
-            unset($queryOld['id']);
-
-            // Update fields for new version of news
-            $queryOld['project_id'] = $this->projectsMapping[$idProjectOld];
-            $queryOld['user_id'] = $this->replaceUser($queryOld['user_id']);
-
-            $column_names = $queryOld['column_names'];
-            $filters= $queryOld['filters'];
-            echo $column_names .`\n`;
-            echo $filters .`\n`;
-
-            $idQueriesNew = $this->dbNew->insert('queries', $queryOld);
-            $this->queriesMapping[$idQueriesOld] = $idQueriesNew;
-        }
-    }
-
     private function migrateDocuments($idProjectOld)
     {
         $result = $this->dbOld->select('documents', array('project_id' => $idProjectOld));
@@ -705,10 +683,6 @@ class migrator
 
         foreach ($projectsOld as $projectOld) {
             unset($projectOld['id']);
-            $result = $this->dbNew->select('projects', array('identifier' => $projectOld['identifier']));
-            if ($result) {
-                $projectOld['identifier'] = $projectOld['identifier'] ."3";
-            }
             $idProjectNew = $this->dbNew->insert('projects', $projectOld);
             $this->projectsMapping[$idProjectOld] = $idProjectNew;
             echo "migrating old redmine $idProjectOld => to new redmine $idProjectNew <br>\n";
@@ -718,7 +692,6 @@ class migrator
             $this->migrateIssuesParents($idProjectOld);
             $this->migrateIssueRelations($idProjectOld);
             $this->migrateNews($idProjectOld);
-            $this->migrateQueries($idProjectOld);
             $this->migrateDocuments($idProjectOld);
             $this->migrateBoards($idProjectOld);
             $this->migrateTimeEntries($idProjectOld);
