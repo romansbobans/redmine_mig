@@ -186,7 +186,7 @@ class migrator
         $statusesOld = $this->dbOld->getAssocArrays($result);
         foreach ($statusesOld as $statussOld) {
             unset($statussOld['id']);
-            $idStatusNew = $this->dbNew->insert('issue_categories', $statussOld);
+            $idStatusNew = $this->dbNew->insert('issue_statuses', $statussOld);
             $this->statusMapping[$idStatusOld] = $idStatusNew;
         }
         return $this->statusMapping[$idStatusOld];
