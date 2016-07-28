@@ -247,6 +247,18 @@ class migrator
         }
     }
 
+    private function migrateGroups() {
+        $result = $this->dbOld->select('groups_users');
+        $groups = $this->dbOld->getAssocArrays($result);
+        foreach ($groups as $group) {
+            $user_id = $group['user_id'];
+            $group_id = $group['group_id'];
+            $group['user_id'] = $this->usersMapping[$user_id];
+            $group['group_id'] = $this->usersMapping[$group_id];
+            $this->dbNew->insert('groups_users', $group);
+        }
+    }
+
     private function migrateJournals($idIssueOld)
     {
         $result = $this->dbOld->select('journals', array('journalized_id' => $idIssueOld));
@@ -716,6 +728,7 @@ class migrator
             $this->migrateAttachments($idProjectOld);
             $this->migrateWatchers($idProjectOld);
             $this->migrateLinks($idProjectNew);
+            $this->migrateGroups();
         }
 
         echo 'projects: ' . count($this->projectsMapping) . " <br>\n";
