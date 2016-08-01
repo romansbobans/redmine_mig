@@ -227,7 +227,7 @@ class migrator
             $field['custom_field_id'] = $this->customFieldsMapping[$oldId];
             $old_id = $field['tracker_id'];
             $field['tracker_id'] = $this->trackersMapping[$old_id];
-            echo "old_id: ".$old_id ."to new id: ".$field['tracker_id'];
+            echo "\nold_id: ".$old_id ."to new id: ".$field['tracker_id']." AND custim field old id: ".$oldId. " To: ". $this->customFieldsMapping[$oldId];
             $this->dbNew->insert('custom_fields_trackers', $field);
         }
     }
