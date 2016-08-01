@@ -431,6 +431,10 @@ class migrator
                 $journalDetail['old_value'] = $this->prioritiesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->prioritiesMapping[$journalDetail['value']];
             }
+            if ($journalDetail['prop_key'] == 'fixed_version_id') {
+                $journalDetail['old_value'] = $this->versionsMapping[$journalDetail['old_value']];
+                $journalDetail['value'] = $this->versionsMapping[$journalDetail['value']];
+            }
 
             $this->dbNew->insert('journal_details', $journalDetail);
         }
