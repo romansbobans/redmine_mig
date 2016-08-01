@@ -114,11 +114,24 @@ class migrator
             unset($oldUser['id']);
             $var = $this->dbNew->insert("users", $oldUser);
             $this->usersMapping[$idUserOld] = $var;
+            $this->insertEmail($var);
             }
             return $var;
         } else {
             $var = $this->usersMapping[$idUserOld];
             return $var;
+        }
+    }
+
+
+    private function insertEmail($oldUserId)
+    {
+        $result = $this->dbOld->select('email_addresses', array('user_id' => $oldUserId));
+        $oldEmails = $this->dbOld->getAssocArrays($result);
+        foreach ($oldEmails as $oldEmail) {
+            unset($oldEmail['id']);
+            $oldEmail['user_id'] = $this->usersMapping['user_id'];
+            $this->dbNew->insert('email_addresses', $oldEmail);
         }
     }
 
