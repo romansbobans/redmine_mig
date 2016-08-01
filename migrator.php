@@ -272,7 +272,7 @@ class migrator
             // Update fields
             $journal['user_id'] = $this->replaceUser($journal['user_id']);
             $journal['journalized_id'] = $this->issuesMapping[$idIssueOld];
-            $journal['notes'] = $this->migrateJournalDetailMessage($journal['notes']);
+            $journal['notes'] = $this->migrateMessage($journal['notes']);
 
             $idJournalNew = $this->dbNew->insert('journals', $journal);
             $this->journalsMapping[$idJournalOld] = $idJournalNew;
@@ -365,7 +365,7 @@ class migrator
             $this->dbNew->insert('journal_details', $journalDetail);
         }
     }
-    
+
     private function migrateAttachments($idProjectOld)
     {
         // $result = $this->dbOld->select('attachments', array('container_type'=> 'Issue'));
