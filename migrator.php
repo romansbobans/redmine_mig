@@ -411,7 +411,9 @@ class migrator
             
           // Update fields
             $journalDetail['journal_id'] = $this->journalsMapping[$idJournalOld];
-            if (in_array($journalDetail['prop_key'], array('blocked', 'copied_from', 'parent_id', 'label_relates_to', 'label_copied_to', 'label_copied_from', 'old_value', 'value'))) {
+            if (in_array($journalDetail['prop_key'], array('blocked', 'copied_to', 'duplicates', 'duplicated',
+                'copied_from', 'parent_id', 'label_relates_to', 'label_copied_to', 'parent_id',
+                'label_copied_from', 'old_value', 'value'))) {
                 $journalDetail['old_value'] = $this->issuesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->issuesMapping[$journalDetail['value']];
             }
@@ -432,10 +434,6 @@ class migrator
                 $journalDetail['value'] = $this->prioritiesMapping[$journalDetail['value']];
             }
             if ($journalDetail['prop_key'] == 'fixed_version_id') {
-                $journalDetail['old_value'] = $this->versionsMapping[$journalDetail['old_value']];
-                $journalDetail['value'] = $this->versionsMapping[$journalDetail['value']];
-            }
-            if ($journalDetail['prop_key'] == 'blocked') {
                 $journalDetail['old_value'] = $this->versionsMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->versionsMapping[$journalDetail['value']];
             }
