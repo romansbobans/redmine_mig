@@ -66,7 +66,6 @@ class migrator
         10  =>  5,
         11  =>  7,
         12  =>  7,
-
     );
 
     private $projectsMapping = array(2 => 60);
@@ -83,7 +82,7 @@ class migrator
     private $boardsMapping = array();
     private $messagesMapping = array();
     private $newsMapping = array();
-    private $queriesMapping = array();
+    private $customFieldsMapping = array();
     private $documentsMapping = array();
     private $wikisMapping = array();
     private $wikipagesMapping = array();
@@ -201,6 +200,31 @@ class migrator
             throw new Exception("No status defined for old tracker id '$idTrackerOld'");
         } else {
             return $this->trackersMapping[$idTrackerOld];
+        }
+    }
+
+
+
+    private function migrateCustomFields()
+    {
+        $result = $this->dbOld->select("custom_fields");
+        $fields = $this->dbOld->getAssocArrays($result);
+        foreach ($fields as $field) {
+            $oldId = $field['id'];
+            unset($field['id']);
+            $newId = $this->dbNew->insert('custom_fields', $field);
+            $this->migrateCustomFieldsTrackers($oldId, $newId);
+        }
+    }
+
+    private function migrateCustomFieldsTrackers($oldId, $newId){
+        $result = $this->dbOld->select("custom_fields_trackers", array('id' => $oldId));
+        $fields = $this->dbOld->getAssocArrays($result);
+        foreach ($fields as $field) {
+            $trackerIdId = $this->trackersMapping[$field['tracker_id']];
+            $field['custom_field_id'] = $newId;
+            $field['tracker_id'] = $trackerIdId;
+            $newId = $this->dbNew->insert('custom_fields_trackers', $field);
         }
     }
 
@@ -738,6 +762,7 @@ class migrator
             $this->migrateIssues($idProjectOld);
             $this->migrateIssuesParents($idProjectOld);
             $this->migrateIssueRelations($idProjectOld);
+            $this->migrateCustomFields();
             $this->migrateNews($idProjectOld);
             $this->migrateDocuments($idProjectOld);
             $this->migrateBoards($idProjectOld);
