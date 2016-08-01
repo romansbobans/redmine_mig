@@ -214,18 +214,35 @@ class migrator
             unset($field['id']);
             unset($field['regexp']);
             $newId = $this->dbNew->insert('custom_fields', $field);
+            $this->customFieldsMapping[$oldId] = $newId;
             $this->migrateCustomFieldsTrackers($oldId, $newId);
         }
+        $this->migrateCustomValues();
     }
 
     private function migrateCustomFieldsTrackers($oldId, $newId){
-        $result = $this->dbOld->select("custom_fields_trackers", array('id' => $oldId));
+        $result = $this->dbOld->select("custom_fields_trackers", array('custom_field_id' => $oldId));
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
             $trackerIdId = $this->trackersMapping[$field['tracker_id']];
             $field['custom_field_id'] = $newId;
             $field['tracker_id'] = $trackerIdId;
             $newId = $this->dbNew->insert('custom_fields_trackers', $field);
+        }
+    }
+
+
+    private function migrateCustomValues()
+    {
+        $result = $this->dbOld->select("custom_values");
+        $fields = $this->dbOld->getAssocArrays($result);
+        foreach ($fields as $field) {
+            $oldId = $field['id'];
+            unset($field['id']);
+            $field['customized_id'] = $this->issuesMapping[$field['customized_id']];
+            $field['custom_field_id'] = $this->customFieldsMapping[$field['custom_field_id']];
+            $newId = $this->dbNew->insert('custom_fields', $field);
+            $this->migrateCustomFieldsTrackers($oldId, $newId);
         }
     }
 
