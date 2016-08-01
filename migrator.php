@@ -216,12 +216,12 @@ class migrator
             $newId = $this->dbNew->insert('custom_fields', $field);
             $this->customFieldsMapping[$oldId] = $newId;
         }
-        echo "\nstarting to migrate custom field trackers\n";
         $this->migrateCustomFieldsTrackers();
         $this->migrateCustomValues();
     }
 
     private function migrateCustomFieldsTrackers(){
+        echo "starting to migrate custom field trackers";
         $result = $this->dbOld->select("custom_fields_trackers");
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
@@ -245,7 +245,6 @@ class migrator
             $field['customized_id'] = $this->issuesMapping[$field['customized_id']];
             $field['custom_field_id'] = $this->customFieldsMapping[$field['custom_field_id']];
             $newId = $this->dbNew->insert('custom_values', $field);
-            $this->migrateCustomFieldsTrackers($oldId, $newId);
         }
     }
 
