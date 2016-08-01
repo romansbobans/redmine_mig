@@ -224,9 +224,10 @@ class migrator
         $result = $this->dbOld->select("custom_fields_trackers", array('custom_field_id' => $oldId));
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
-            $trackerIdId = $this->trackersMapping[$field['tracker_id']];
             $field['custom_field_id'] = $this->customFieldsMapping[$oldId];
-            $field['tracker_id'] = $trackerIdId;
+            $old_id = $field['tracker_id'];
+            $field['tracker_id'] = $this->trackersMapping[$old_id];
+            echo "old_id: ".$old_id ."to new id: ".$field['tracker_id'];
             $this->dbNew->insert('custom_fields_trackers', $field);
         }
     }
