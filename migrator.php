@@ -272,12 +272,31 @@ class migrator
             // Update fields
             $journal['user_id'] = $this->replaceUser($journal['user_id']);
             $journal['journalized_id'] = $this->issuesMapping[$idIssueOld];
+            $journal['notes'] = $this->migrateMessage($journal['notes']);
 
             $idJournalNew = $this->dbNew->insert('journals', $journal);
             $this->journalsMapping[$idJournalOld] = $idJournalNew;
 
             $this->migrateJournalsDetails($idJournalOld);
         }
+    }
+
+    private function migrateMessage($noteOld)
+    {
+        $offset = 0;
+        $pattern = '/(issues\/)(\d+)/';
+        while (true) {
+            if (strlen($noteOld) < $offset) {
+                return $noteOld;
+            }
+            preg_match($pattern, $noteOld, $matches, PREG_OFFSET_CAPTURE, $offset);
+
+            if (count($matches) > 1) {
+                $offset = strpos($noteOld, $matches[0][0], $offset) + 1;
+                $noteOld = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $noteOld);
+            }
+        }
+        return $noteOld;
     }
 
     private function migrateTimeEntries($idProjectOld)
@@ -407,6 +426,7 @@ class migrator
             $this->nbAt++;
         }
     }
+
     private function migrateLinks($idProjectNew)
     {
         $result = $this->dbNew->select('issues', array('project_id' => $idProjectNew));
