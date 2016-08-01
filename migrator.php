@@ -240,11 +240,13 @@ class migrator
         $result = $this->dbOld->select("custom_values");
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
-            $oldId = $field['id'];
             unset($field['id']);
-            $field['customized_id'] = $this->issuesMapping[$field['customized_id']];
+            $oldId = $field['customized_id'];
+            $newId = $this->issuesMapping[$oldId];
+            echo "old issue id: $oldId transformed to new id: $newId";
+            $field['customized_id'] = $newId;
             $field['custom_field_id'] = $this->customFieldsMapping[$field['custom_field_id']];
-            $newId = $this->dbNew->insert('custom_values', $field);
+            $this->dbNew->insert('custom_values', $field);
         }
     }
 
