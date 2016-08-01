@@ -47,27 +47,26 @@ class migrator
             5 => 7,
         );
 
-    private $statusMapping = array(
-            1   =>  1,
-            2   =>  2,
-            3   =>  3,
-            4   =>  4,
-            5   =>  5,
-            6   =>  6,
-            7   =>  7,
-            8   =>  8,
-            9   =>  9,
-            10  =>  10,
-            11  =>  11,
-            12  =>  12,
-            13  =>  13,
-    );
-
     private $trackersMapping = array(
             1 => 1,
             2 => 7,
             3 => 6,
             4 => 5,
+    );
+
+    private $statusMapping = array(
+        1   =>  1,
+        2   =>  2,
+        3   =>  12,
+        4   =>  3,
+        5   =>  7,
+        6   =>  6,
+        7   =>  9,
+        9   =>  4,
+        10  =>  5,
+        11  =>  10,
+        12  =>  11,
+
     );
 
     private $projectsMapping = array(2 => 60);
@@ -170,7 +169,7 @@ class migrator
         }
 
         if (!isset($this->statusMapping[$idStatusOld])) {
-            throw new Exception("No status defined for old status id '$idStatusOld'");
+            return $this->insertStatus($idStatusOld);
         } else {
             $status = $this->statusMapping[$idStatusOld];
             $mysqli_result = $this->dbNew->select("issue_statuses", array('id' => $status));
