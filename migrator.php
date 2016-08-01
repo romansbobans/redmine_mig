@@ -215,15 +215,16 @@ class migrator
             unset($field['regexp']);
             $newId = $this->dbNew->insert('custom_fields', $field);
             $this->customFieldsMapping[$oldId] = $newId;
-            $this->migrateCustomFieldsTrackers($oldId);
         }
+        $this->migrateCustomFieldsTrackers();
         $this->migrateCustomValues();
     }
 
-    private function migrateCustomFieldsTrackers($oldId){
-        $result = $this->dbOld->select("custom_fields_trackers", array('custom_field_id' => $oldId));
+    private function migrateCustomFieldsTrackers(){
+        $result = $this->dbOld->select("custom_fields_trackers");
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
+            $oldId = $field['custom_field_id'];
             $field['custom_field_id'] = $this->customFieldsMapping[$oldId];
             $old_id = $field['tracker_id'];
             $field['tracker_id'] = $this->trackersMapping[$old_id];
