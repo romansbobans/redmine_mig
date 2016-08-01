@@ -243,7 +243,9 @@ class migrator
             unset($field['id']);
             $oldId = $field['customized_id'];
             $newId = $this->issuesMapping[$oldId];
-            echo "old issue id: $oldId transformed to new id: $newId";
+            if (!isset($newId)) {
+                continue;
+            }
             $field['customized_id'] = $newId;
             $field['custom_field_id'] = $this->customFieldsMapping[$field['custom_field_id']];
             $this->dbNew->insert('custom_values', $field);
