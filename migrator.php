@@ -272,7 +272,7 @@ class migrator
             // Update fields
             $journal['user_id'] = $this->replaceUser($journal['user_id']);
             $journal['journalized_id'] = $this->issuesMapping[$idIssueOld];
-            $journal['notes'] = $this->migrateMessage($journal['notes']);
+            $journal['notes'] = $this->migrateJournalDetailMessage($journal['notes']);
 
             $idJournalNew = $this->dbNew->insert('journals', $journal);
             $this->journalsMapping[$idJournalOld] = $idJournalNew;
@@ -281,6 +281,7 @@ class migrator
         }
     }
 
+
     private function migrateMessage($noteOld)
     {
         $offset = 0;
@@ -288,7 +289,7 @@ class migrator
         preg_match($pattern, $noteOld, $matches, PREG_OFFSET_CAPTURE, $offset);
 
         if (count($matches) > 1) {
-        //    $offset = strpos($noteOld, $matches[0][0], $offset) + 1;
+            //    $offset = strpos($noteOld, $matches[0][0], $offset) + 1;
             $noteOld = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $noteOld);
         }
         return $noteOld;
@@ -340,7 +341,7 @@ class migrator
             
           // Update fields
             $journalDetail['journal_id'] = $this->journalsMapping[$idJournalOld];
-            if (in_array($journalDetail['prop_key'], array('parent_id', 'label_relates_to', 'label_copied_to', 'label_copied_from', 'old_value', 'value'))) {
+            if (in_array($journalDetail['prop_key'], array('copied_from', 'parent_id', 'label_relates_to', 'label_copied_to', 'label_copied_from', 'old_value', 'value'))) {
                 $journalDetail['old_value'] = $this->issuesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->issuesMapping[$journalDetail['value']];
             }
@@ -364,7 +365,7 @@ class migrator
             $this->dbNew->insert('journal_details', $journalDetail);
         }
     }
-
+    
     private function migrateAttachments($idProjectOld)
     {
         // $result = $this->dbOld->select('attachments', array('container_type'=> 'Issue'));
