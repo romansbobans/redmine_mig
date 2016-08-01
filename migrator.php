@@ -253,12 +253,12 @@ class migrator
     }
     private function migrateProjectTrackers()
     {
-        $result = $this->dbOld->select("project_trackers");
+        $result = $this->dbOld->select("projects_trackers");
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
             $field['project_id'] = $this->projectsMapping[$field['project_id']];
             $field['tracker_id'] = $this->trackersMapping[$field['tracker_id']];
-            $this->dbNew->insert('project_trackers', $field);
+            $this->dbNew->insert('projects_trackers', $field);
         }
     }
 
