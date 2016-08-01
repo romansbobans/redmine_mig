@@ -241,7 +241,7 @@ class migrator
             unset($field['id']);
             $field['customized_id'] = $this->issuesMapping[$field['customized_id']];
             $field['custom_field_id'] = $this->customFieldsMapping[$field['custom_field_id']];
-            $newId = $this->dbNew->insert('custom_fields', $field);
+            $newId = $this->dbNew->insert('custom_values', $field);
             $this->migrateCustomFieldsTrackers($oldId, $newId);
         }
     }
