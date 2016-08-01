@@ -251,6 +251,16 @@ class migrator
             $this->dbNew->insert('custom_values', $field);
         }
     }
+    private function migrateProjectTrackers()
+    {
+        $result = $this->dbOld->select("project_trackers");
+        $fields = $this->dbOld->getAssocArrays($result);
+        foreach ($fields as $field) {
+            $field['project_id'] = $this->projectsMapping[$field['project_id']];
+            $field['tracker_id'] = $this->trackersMapping[$field['tracker_id']];
+            $this->dbNew->insert('project_trackers', $field);
+        }
+    }
 
     private function replaceCategory($idCategoryOld)
     {
@@ -796,6 +806,7 @@ class migrator
             $this->migrateWatchers($idProjectOld);
             $this->migrateLinks($idProjectNew);
             $this->migrateCustomFields();
+            $this->migrateProjectTrackers();
             $this->migrateGroups();
         }
 
