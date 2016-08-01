@@ -253,6 +253,9 @@ class migrator
         foreach ($groups as $group) {
             $user_id = $group['user_id'];
             $group_id = $group['group_id'];
+            if (!isset($this->usersMapping[$group_id]) || !isset($this->usersMapping[$user_id])) {
+                continue;
+            }
             $group['user_id'] = $this->usersMapping[$user_id];
             $group['group_id'] = $this->usersMapping[$group_id];
             $this->dbNew->insert('groups_users', $group);
