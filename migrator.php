@@ -258,7 +258,7 @@ class migrator
         $fields = $this->dbOld->getAssocArrays($result);
         foreach ($fields as $field) {
             $field['project_id'] = $this->projectsMapping[$field['project_id']];
-            $field['custom_field_id'] = $this->trackersMapping[$field['custom_field_id']];
+            $field['custom_field_id'] = $this->customFieldsMapping[$field['custom_field_id']];
             $this->dbNew->insert('custom_fields_projects', $field);
         }
     }
