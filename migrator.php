@@ -651,8 +651,9 @@ class migrator
         $result = $this->dbOld->select('issues', array('project_id' => $idProjectOld));
         $issuesOld = $this->dbOld->getAssocArrays($result);
         foreach ($issuesOld as $issueOld) {
-            $idIssueOld = $issueOld['id']+10000;
-            unset($issueOld['id']);
+            $idIssueOld = $issueOld['id'];
+            $issueOld['id'] = $idIssueOld+10000;
+           // unset($issueOld['id']);
 
             $issueOld['project_id'] = $this->projectsMapping[$idProjectOld];
             $issueOld['assigned_to_id'] = $this->replaceUser($issueOld['assigned_to_id']);
