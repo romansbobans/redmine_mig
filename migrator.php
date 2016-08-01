@@ -212,6 +212,7 @@ class migrator
         foreach ($fields as $field) {
             $oldId = $field['id'];
             unset($field['id']);
+            unset($field['regexp']);
             $newId = $this->dbNew->insert('custom_fields', $field);
             $this->migrateCustomFieldsTrackers($oldId, $newId);
         }
