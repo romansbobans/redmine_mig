@@ -65,9 +65,9 @@ class migrator
 
     private $trackersMapping = array(
             1 => 1,
-            2 => 2,
-            3 => 3,
-            4 => 4,
+            2 => 7,
+            3 => 6,
+            4 => 5,
     );
 
     private $projectsMapping = array(2 => 60);
