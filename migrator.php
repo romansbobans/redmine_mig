@@ -780,7 +780,6 @@ class migrator
             $this->migrateIssues($idProjectOld);
             $this->migrateIssuesParents($idProjectOld);
             $this->migrateIssueRelations($idProjectOld);
-            $this->migrateCustomFields();
             $this->migrateNews($idProjectOld);
             $this->migrateDocuments($idProjectOld);
             $this->migrateBoards($idProjectOld);
@@ -790,6 +789,7 @@ class migrator
             $this->migrateAttachments($idProjectOld);
             $this->migrateWatchers($idProjectOld);
             $this->migrateLinks($idProjectNew);
+            $this->migrateCustomFields();
             $this->migrateGroups();
         }
 
