@@ -424,8 +424,10 @@ class migrator
             
           // Update fields
             $journalDetail['journal_id'] = $this->journalsMapping[$idJournalOld];
-            if (in_array($journalDetail['prop_key'], array('blocked', 'copied_to', 'duplicates', 'duplicated',
-                'copied_from', 'parent_id', 'label_relates_to', 'label_copied_to', 'parent_id',
+            if (in_array($journalDetail['prop_key'], array('blocked', 'blocks', 'follows', 'copied_to',
+                'duplicates', 'duplicated', 'relates',
+                'copied_from', 'parent_id', 'label_relates_to',
+                'label_copied_to', 'parent_id',
                 'label_copied_from', 'old_value', 'value'))) {
                 $journalDetail['old_value'] = $this->issuesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->issuesMapping[$journalDetail['value']];
@@ -445,6 +447,10 @@ class migrator
             if ($journalDetail['prop_key'] == 'priority_id') {
                 $journalDetail['old_value'] = $this->prioritiesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->prioritiesMapping[$journalDetail['value']];
+            }
+            if ($journalDetail['prop_key'] == 'project_id') {
+                $journalDetail['old_value'] = $this->projectsMapping[$journalDetail['old_value']];
+                $journalDetail['value'] = $this->projectsMapping[$journalDetail['value']];
             }
             if ($journalDetail['prop_key'] == 'fixed_version_id') {
                 $journalDetail['old_value'] = $this->versionsMapping[$journalDetail['old_value']];
