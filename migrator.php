@@ -805,13 +805,15 @@ class migrator
             $idIssueOld = $issueOld['id'];
             if ($issueOld['parent_id'] > 0) {
 
-                // Update parents for issues
                 $issueUpdate['parent_id'] = $this->replaceIssue($issueOld['parent_id']);
+            }
+            if ($issueOld['root_id'] > 0){
                 $issueUpdate['root_id'] = $this->replaceIssue($issueOld['root_id']);
-
+            }
+            if (isset($issueUpdate) && ($issueUpdate['root_id'] > 0 || $issueUpdate['parent_id'] > 0)) {
                 $idParentIssueNew = $this->dbNew->update('issues', $issueUpdate, array('id' => $this->issuesMapping[$issueOld['id']]));
                 $this->issuesParentsMapping[$idIssueOld] = $idParentIssueNew;
-            } 
+            }
         }
     }
 
