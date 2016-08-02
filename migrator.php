@@ -356,6 +356,7 @@ class migrator
             $journal['user_id'] = $this->replaceUser($journal['user_id']);
             $journal['journalized_id'] = $this->issuesMapping[$idIssueOld];
             $journal['notes'] = $this->migrateMessage($journal['notes']);
+            $journal['notes'] = $this->migrateMessage2($journal['notes']);
 
             $idJournalNew = $this->dbNew->insert('journals', $journal);
             $this->journalsMapping[$idJournalOld] = $idJournalNew;
