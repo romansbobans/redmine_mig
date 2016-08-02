@@ -440,7 +440,7 @@ class migrator
             if (in_array($journalDetail['prop_key'], array('blocked', 'blocks', 'follows', 'copied_to',
                 'duplicates', 'duplicated', 'relates',
                 'copied_from', 'parent_id', 'label_relates_to',
-                'label_copied_to', 'parent_id',
+                'label_copied_to',
                 'label_copied_from', 'old_value', 'value'))) {
                 $journalDetail['old_value'] = $this->issuesMapping[$journalDetail['old_value']];
                 $journalDetail['value'] = $this->issuesMapping[$journalDetail['value']];
@@ -802,18 +802,11 @@ class migrator
         $result = $this->dbOld->select('issues', array('project_id' => $idProjectOld));
         $issuesOld = $this->dbOld->getAssocArrays($result);
         foreach ($issuesOld as $issueOld) {
+            $issueUpdate = array();
             $idIssueOld = $issueOld['id'];
-            if ($issueOld['parent_id'] > 0) {
-
-                $issueUpdate['parent_id'] = $this->replaceIssue($issueOld['parent_id']);
-            }
-            if ($issueOld['root_id'] > 0){
-                $issueUpdate['root_id'] = $this->replaceIssue($issueOld['root_id']);
-            }
-            if (isset($issueUpdate) && ($issueUpdate['root_id'] > 0 || $issueUpdate['parent_id'] > 0)) {
-                $idParentIssueNew = $this->dbNew->update('issues', $issueUpdate, array('id' => $this->issuesMapping[$issueOld['id']]));
-                $this->issuesParentsMapping[$idIssueOld] = $idParentIssueNew;
-            }
+            $issueUpdate['parent_id'] = $this->replaceIssue($issueOld['parent_id']);
+            $issueUpdate['root_id'] = $this->replaceIssue($issueOld['root_id']);
+            $this->dbNew->update('issues', $issueUpdate, array('id' => $this->issuesMapping[$issueOld['id']]));
         }
     }
 
