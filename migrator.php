@@ -377,6 +377,18 @@ class migrator
         }
         return $noteOld;
     }
+    private function migrateMessage2($noteOld)
+    {
+        $offset = 0;
+        $pattern = '/(#)(\d+)/';
+        preg_match($pattern, $noteOld, $matches, PREG_OFFSET_CAPTURE, $offset);
+
+        if (count($matches) > 1) {
+            //    $offset = strpos($noteOld, $matches[0][0], $offset) + 1;
+            $noteOld = str_replace($matches[0][0], "{$matches[1][0]}{$this->issuesMapping[$matches[2][0]]}", $noteOld);
+        }
+        return $noteOld;
+    }
 
     private function migrateTimeEntries($idProjectOld)
     {
