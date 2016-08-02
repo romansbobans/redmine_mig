@@ -807,6 +807,7 @@ class migrator
 
                 // Update parents for issues
                 $issueUpdate['parent_id'] = $this->replaceIssue($issueOld['parent_id']);
+                $issueUpdate['root_id'] = $this->replaceIssue($issueOld['root_id']);
 
                 $idParentIssueNew = $this->dbNew->update('issues', $issueUpdate, array('id' => $this->issuesMapping[$issueOld['id']]));
                 $this->issuesParentsMapping[$idIssueOld] = $idParentIssueNew;
